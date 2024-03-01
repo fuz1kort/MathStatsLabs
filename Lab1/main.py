@@ -18,26 +18,26 @@ with open(file) as file:
 data = sorted(map(float, data))
 npArray = np.array(data)
 
-# data
+# Данные
 size = len(data)
 print("Объём данных ", size)
 
-# max and min
+# Минимальное и максимальное числа
 min_num = data[0]
 max_num = data[size - 1]
 print("min:", min_num, "\nmax:", max_num)
 
-# scope
+# Размах
 scope = max_num - min_num
 range_data = np.ptp(npArray)
 print("Размах:", scope, "Функцией:", range_data)
 
-# average
+# Среднее арифметическое
 avg = sum(data) / size
 mean_data = np.mean(npArray)
 print("Среднее значение:", avg, "Функцией:", mean_data)
 
-# sample variance
+# Дисперсия выборочной
 variance_data = stats.describe(data).variance
 
 sample_variance = 0
@@ -47,7 +47,7 @@ for x in data:
 print("Дисперсия выборочной:", sample_variance,
       "Функцией:", variance_data)
 
-# Population variance
+# Дисперсия популяции
 population_variancef = np.var(data)
 population_variance = 0
 for x in data:
@@ -55,35 +55,35 @@ for x in data:
 print("Дисперсия популяции:", population_variance,
       "Функцией:", population_variancef)
 
-# standard deviation
+# Стандартное отклонение
 standard_deviation = population_variance ** 0.5
 standard_deviationf = np.std(npArray)
 
 print("Стандартного отклонения:", standard_deviation,
       "Функцией:", standard_deviationf)
 
-# medium
-medium = data[size // 2] if size % 2 == 0 else (data[size // 2] + data[size // 2 + 1]) / 2
-median_data = np.median(npArray)
-print("Медиана:", medium,
-      "Функцией:", median_data)
+# Медиана
+mediana = data[size // 2] if size % 2 == 0 else (data[size // 2] + data[size // 2 + 1]) / 2
+mediana_data = np.median(npArray)
+print("Медиана:", mediana,
+      "Функцией:", mediana_data)
 
-# mode
+# Мода
 mode = max(set(data), key=data.count)
 mode_data = stats.mode(data).mode
 print("Мода:", mode,
       "Функцией:", mode_data)
 
-# symmetry coefficients
+# Коэффициент симметрии
 skewness = sum(((x - avg) / standard_deviation) ** 3 for x in data) * size / ((size - 1) * (size - 2))
 skewness_data = stats.skew(data)
 print("Коэффициент симметрии:", skewness,
       "Функцией:", skewness_data)
 
-# quantiles (25%, 50%, 75%)
+# Квантили (25%, 50%, 75%)
 
 first_quantile = data[size // 4] if size % 4 == 0 else (data[size // 4] + data[size // 4 + 1]) / 2
-medium_quantile = medium
+medium_quantile = mediana
 last_quantile = data[3 * size // 4] if size % 4 != 0 else (data[3 * size // 4] + data[3 * size // 4 + 1]) / 2
 
 quantile_25 = np.percentile(npArray, 25)
@@ -91,14 +91,14 @@ quantile_50 = np.percentile(npArray, 50)
 quantile_75 = np.percentile(npArray, 75)
 print("25% 50% 75%", first_quantile, medium_quantile, last_quantile,
       "\n25% 50% 75% f", quantile_25, quantile_50, quantile_75)
-# interquartile latitude
+# Интерквартильная ширина
 interquartile = last_quantile - first_quantile
 iqr_data = np.percentile(data, 75) - np.percentile(data, 25)
 iqr_dataf = np.percentile(data, 75) - np.percentile(data, 25)
 print("Интерквартильная ширина: ", iqr_data,
       "Функцией:", iqr_dataf)
 
-# graphics
+# Графики
 # Построение частотной гистограммы
 plt.figure(figsize=(12, 6))
 plt.subplot(2, 2, 1)
@@ -117,7 +117,7 @@ plt.title('Эмпирическая функция (функция распре�
 
 # Нанесение нормального распределения на эмпирическую функцию
 x = data
-y = norm.cdf(x, loc=medium, scale=standard_deviation)
+y = norm.cdf(x, loc=mediana, scale=standard_deviation)
 plt.plot(x, y, color='blue')
 plt.title('Нормальное распределение на эмпирической функции')
 
