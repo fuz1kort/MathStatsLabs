@@ -1,12 +1,11 @@
+import csv
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from scipy import stats
 from scipy.stats import norm
-import csv
 
 file = r"./14/r1z1.csv"
-
 data = []
 with open(file) as file:
     reader = csv.reader(file)
@@ -20,9 +19,9 @@ npArray = np.array(data)
 
 # Данные
 size = len(data)
-print("Объём данных ", size)
+print("Объём выборки ", size)
 
-# Минимальное и максимальное числа
+# Минимум/Максимум
 min_num = data[0]
 max_num = data[size - 1]
 print("min:", min_num, "\nmax:", max_num)
@@ -32,19 +31,17 @@ scope = max_num - min_num
 range_data = np.ptp(npArray)
 print("Размах:", scope, "Функцией:", range_data)
 
-# Среднее арифметическое
+# Простое среднее
 avg = sum(data) / size
 mean_data = np.mean(npArray)
 print("Среднее значение:", avg, "Функцией:", mean_data)
 
-# Дисперсия выборочной
+# Выборочная дисперсия
 variance_data = stats.describe(data).variance
-
 sample_variance = 0
 for x in data:
     sample_variance += ((x - avg) ** 2) / (size - 1)
-
-print("Дисперсия выборочной:", sample_variance,
+print("Выборочная дисперсия:", sample_variance,
       "Функцией:", variance_data)
 
 # Дисперсия популяции
@@ -58,12 +55,15 @@ print("Дисперсия популяции:", population_variance,
 # Стандартное отклонение
 standard_deviation = population_variance ** 0.5
 standard_deviationf = np.std(npArray)
-
 print("Стандартного отклонения:", standard_deviation,
       "Функцией:", standard_deviationf)
 
 # Медиана
-mediana = data[size // 2] if size % 2 == 0 else (data[size // 2] + data[size // 2 + 1]) / 2
+med = 0
+if size % 2 == 0:
+    mediana = data[size // 2]
+else:
+    mediana = (data[size // 2] + data[size // 2 + 1]) / 2
 mediana_data = np.median(npArray)
 print("Медиана:", mediana,
       "Функцией:", mediana_data)
@@ -75,13 +75,15 @@ print("Мода:", mode,
       "Функцией:", mode_data)
 
 # Коэффициент симметрии
-skewness = sum(((x - avg) / standard_deviation) ** 3 for x in data) * size / ((size - 1) * (size - 2))
+skewness = 0
+for x in data:
+    skewness += ((x - avg) / standard_deviation) ** 3
+skewness = skewness * size / ((size - 1) * (size - 2))
 skewness_data = stats.skew(data)
 print("Коэффициент симметрии:", skewness,
       "Функцией:", skewness_data)
 
 # Квантили (25%, 50%, 75%)
-
 first_quantile = data[size // 4] if size % 4 == 0 else (data[size // 4] + data[size // 4 + 1]) / 2
 medium_quantile = mediana
 last_quantile = data[3 * size // 4] if size % 4 != 0 else (data[3 * size // 4] + data[3 * size // 4 + 1]) / 2
@@ -90,7 +92,8 @@ quantile_25 = np.percentile(npArray, 25)
 quantile_50 = np.percentile(npArray, 50)
 quantile_75 = np.percentile(npArray, 75)
 print("25% 50% 75%", first_quantile, medium_quantile, last_quantile,
-      "\n25% 50% 75% f", quantile_25, quantile_50, quantile_75)
+      "\n25% 50% 75% Функцией", quantile_25, quantile_50, quantile_75)
+
 # Интерквартильная ширина
 interquartile = last_quantile - first_quantile
 iqr_data = np.percentile(data, 75) - np.percentile(data, 25)
