@@ -105,28 +105,45 @@ print("Интерквартильная ширина: ", iqr_data,
 # Построение частотной гистограммы
 plt.figure(figsize=(12, 6))
 plt.subplot(2, 2, 1)
-plt.hist(data, bins=30, color='blue', edgecolor='black')
+count, bins, _ = plt.hist(data, bins=size//10, color='skyblue', edgecolor='black')
+plt.xlim(bins[0], bins[-1])
+plt.xlabel('Значения')
+plt.ylabel('Частота')
 plt.title('Частотная гистограмма')
 
 # Построение вероятностной гистограммы с функцией плотности
 plt.subplot(2, 2, 2)
-sns.histplot(data, kde=True, color='blue')
+count, bins, _ = plt.hist(data, bins=size//10, density=True, color='orange', edgecolor='black', alpha=0.7)
+plt.xlim(bins[0], bins[-1])
+xmin, xmax = plt.xlim()
+x = np.linspace(xmin, xmax, 100)
+p = norm.pdf(x, np.mean(data), np.std(data))
+plt.plot(x, p, 'k', linewidth=2)
 plt.title('Вероятностная гистограмма с функцией плотности')
 
 # Полигон распределения
 plt.subplot(2, 2, 3)
-sns.kdeplot(data, cumulative=True, color='red')
-plt.title('Эмпирическая функция (функция распределения)')
-
-# Нанесение нормального распределения на эмпирическую функцию
-x = data
-y = norm.cdf(x, loc=mediana, scale=standard_deviation)
-plt.plot(x, y, color='blue')
-plt.title('Нормальное распределение на эмпирической функции')
+plt.step(npArray, np.arange(1, len(npArray) + 1) / len(npArray))
+plt.xlabel('Values')
+plt.ylabel('Probability')
+plt.title('Полигон')
+plt.grid(True)
 
 # Построение box plot
 plt.subplot(2, 2, 4)
 plt.boxplot(data, vert=True, patch_artist=True, showmeans=True, showfliers=True)
 plt.title('Box Plot')
 plt.xlabel('Значения')
+
+# Нанесение нормального распределения на эмпирическую функцию
+plt.figure(figsize=(12, 6))
+plt.hist(data, bins=9, density=True, color='skyblue', edgecolor='black', alpha=0.7, label='Empirical Distribution')
+plt.xlim(bins[0], bins[-1])
+
+plt.plot(x, norm.pdf(x, mediana, standard_deviation), 'k', linewidth=2, label='Normal Distribution')
+plt.xlabel('Values')
+plt.ylabel('Density')
+plt.title('Empirical Distribution with Normal Distribution Overlay')
+
+
 plt.show()
