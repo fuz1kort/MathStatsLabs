@@ -1,7 +1,7 @@
 import csv
+
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
 from scipy import stats
 from scipy.stats import norm
 
@@ -60,10 +60,7 @@ print("Стандартного отклонения:", standard_deviation,
 
 # Медиана
 med = 0
-if size % 2 == 0:
-    mediana = data[size // 2]
-else:
-    mediana = (data[size // 2] + data[size // 2 + 1]) / 2
+mediana = data[size // 2] if size % 2 != 0 else (data[size // 2 - 1] + data[size // 2]) / 2
 mediana_data = np.median(npArray)
 print("Медиана:", mediana,
       "Функцией:", mediana_data)
@@ -84,9 +81,9 @@ print("Коэффициент симметрии:", skewness,
       "Функцией:", skewness_data)
 
 # Квантили (25%, 50%, 75%)
-first_quantile = data[size // 4] if size % 4 == 0 else (data[size // 4] + data[size // 4 + 1]) / 2
+first_quantile = data[size // 4] if size % 4 != 0 else (data[size // 4] + data[size // 4 - 1]) / 2
 medium_quantile = mediana
-last_quantile = data[3 * size // 4] if size % 4 != 0 else (data[3 * size // 4] + data[3 * size // 4 + 1]) / 2
+last_quantile = data[3 * size // 4] if size % 4 != 0 else (data[3 * size // 4 + 1] + data[3 * size // 4]) / 2
 
 quantile_25 = np.percentile(npArray, 25)
 quantile_50 = np.percentile(npArray, 50)
@@ -105,7 +102,7 @@ print("Интерквартильная ширина: ", iqr_data,
 # Построение частотной гистограммы
 plt.figure(figsize=(12, 6))
 plt.subplot(2, 2, 1)
-count, bins, _ = plt.hist(data, bins=size//10, color='skyblue', edgecolor='black')
+count, bins, _ = plt.hist(data, bins=size // 10, color='skyblue', edgecolor='black')
 plt.xlim(bins[0], bins[-1])
 plt.xlabel('Значения')
 plt.ylabel('Частота')
@@ -113,7 +110,7 @@ plt.title('Частотная гистограмма')
 
 # Построение вероятностной гистограммы с функцией плотности
 plt.subplot(2, 2, 2)
-count, bins, _ = plt.hist(data, bins=size//10, density=True, color='orange', edgecolor='black', alpha=0.7)
+count, bins, _ = plt.hist(data, bins=size // 10, density=True, color='orange', edgecolor='black', alpha=0.7)
 plt.xlim(bins[0], bins[-1])
 xmin, xmax = plt.xlim()
 x = np.linspace(xmin, xmax, 100)
@@ -125,7 +122,7 @@ plt.title('Вероятностная гистограмма с функцией
 plt.subplot(2, 2, 3)
 plt.step(npArray, np.arange(1, len(npArray) + 1) / len(npArray))
 plt.xlabel('Values')
-plt.ylabel('Probability')
+plt.ylabel('Вероятность')
 plt.title('Полигон')
 plt.grid(True)
 
@@ -137,13 +134,12 @@ plt.xlabel('Значения')
 
 # Нанесение нормального распределения на эмпирическую функцию
 plt.figure(figsize=(12, 6))
-plt.hist(data, bins=9, density=True, color='skyblue', edgecolor='black', alpha=0.7, label='Empirical Distribution')
+plt.hist(data, bins=9, density=True, color='skyblue', edgecolor='black', alpha=0.7, label='Эмпирическое распределение')
 plt.xlim(bins[0], bins[-1])
 
-plt.plot(x, norm.pdf(x, mediana, standard_deviation), 'k', linewidth=2, label='Normal Distribution')
-plt.xlabel('Values')
-plt.ylabel('Density')
-plt.title('Empirical Distribution with Normal Distribution Overlay')
-
+plt.plot(x, norm.pdf(x, mediana, standard_deviation), 'k', linewidth=2, label='Нормальное распределение')
+plt.xlabel('Значения')
+plt.ylabel('Плотность')
+plt.title('Эмпирическое распределение с наложением нормального распределения')
 
 plt.show()
