@@ -5,7 +5,7 @@ import numpy as np
 from scipy import stats
 from scipy.stats import norm
 
-file = r"./14/r1z1.csv"
+file = r"r1z1.csv"
 data = []
 with open(file) as file:
     reader = csv.reader(file)
